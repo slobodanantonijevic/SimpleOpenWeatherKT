@@ -1,2 +1,2 @@
 # SimpleOpenWeatherKT
-SImple Open Weather - Kotlin
+SImple Open Weather - Kotlin Android App
