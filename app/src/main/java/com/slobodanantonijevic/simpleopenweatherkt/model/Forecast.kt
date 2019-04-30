@@ -34,7 +34,7 @@ data class Forecast(
     val message: Double,
     @PrimaryKey
     @ColumnInfo(name = "id")
-    val id: Int
+    var id: Int
 )
 
 data class DayForecast(

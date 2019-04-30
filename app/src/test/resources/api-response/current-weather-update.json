@@ -1,0 +1,42 @@
+{
+  "coord": {
+    "lon": 4.89,
+    "lat": 52.37
+  },
+  "weather": [
+    {
+      "id": 211,
+      "main": "Thunderstorm",
+      "description": "thunderstorm",
+      "icon": "11n"
+    }
+  ],
+  "base": "stations",
+  "main": {
+    "temp": 9.92,
+    "pressure": 1022,
+    "humidity": 81,
+    "temp_min": 8.89,
+    "temp_max": 11.11
+  },
+  "visibility": 10000,
+  "wind": {
+    "speed": 2.6,
+    "deg": 40
+  },
+  "clouds": {
+    "all": 75
+  },
+  "dt": 1556659878,
+  "sys": {
+    "type": 1,
+    "id": 1524,
+    "message": 0.0153,
+    "country": "NL",
+    "sunrise": 1556597527,
+    "sunset": 1556650985
+  },
+  "id": 2759794,
+  "name": "Amsterdam",
+  "cod": 200
+}
