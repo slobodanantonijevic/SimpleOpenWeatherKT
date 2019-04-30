@@ -28,7 +28,7 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
 
     @Inject
-    private lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var currentWeatherViewModel: CurrentWeatherViewModel
     private lateinit var forecastViewModel: ForecastViewModel

@@ -45,7 +45,7 @@ data class DayForecast(
     @SerializedName("dt")
     val dt: Int,
     @SerializedName("humidity")
-    val humidity: Int,
+    val humidity: Double,
     @SerializedName("pressure")
     val pressure: Double,
     @SerializedName("rain")
