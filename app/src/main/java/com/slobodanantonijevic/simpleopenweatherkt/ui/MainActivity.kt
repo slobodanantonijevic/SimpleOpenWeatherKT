@@ -17,15 +17,18 @@
 
 package com.slobodanantonijevic.simpleopenweatherkt.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.slobodanantonijevic.simpleopenweatherkt.R
+import com.slobodanantonijevic.simpleopenweatherkt.WeatherActivity
+import com.slobodanantonijevic.simpleopenweatherkt.model.CurrentWeather
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : WeatherActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -44,5 +47,34 @@ class MainActivity : AppCompatActivity() {
             .get(CurrentWeatherViewModel::class.java)
 
         //TODO: [ForecastViewModel]
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        listenToCurrentWeather()
+    }
+
+    private fun listenToCurrentWeather() {
+
+        disposable.add(currentWeatherViewModel.currentWeather(1)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {currentWeather -> updateTheCurrentWeatherUi(currentWeather)},
+                {error -> handleError(error)}))
+    }
+
+    private fun updateTheCurrentWeatherUi(currentWeather: CurrentWeather) {
+
+
+    }
+
+    override fun onStop() {
+
+        super.onStop()
+
+        // Clear all of the subscriptions
+        disposable.clear()
     }
 }

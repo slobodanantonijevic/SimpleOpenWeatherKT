@@ -56,7 +56,10 @@ class CurrentWeatherViewModel @Inject constructor (
     fun getFreshWeather(cityId: Int?, cityName: String?): Single<CurrentWeather> {
 
         return api.getCurrentWeather(cityId, cityName)
-            .doOnSuccess { currentWeather -> updateWeatherData(currentWeather) }
+            .doOnSuccess {
+                    currentWeather -> updateWeatherData(currentWeather)}
+            .doOnError{
+                    error -> /* TODO: Handle error */}
     }
 
     /**
@@ -65,7 +68,7 @@ class CurrentWeatherViewModel @Inject constructor (
      *
      * @return a [Completable] that completes when the new weather has been stored
      */
-    fun updateWeatherData(weather: CurrentWeather) : Completable {
+    fun updateWeatherData(weather: CurrentWeather): Completable {
 
         return currentWeatherDao.insert(weather)
     }
