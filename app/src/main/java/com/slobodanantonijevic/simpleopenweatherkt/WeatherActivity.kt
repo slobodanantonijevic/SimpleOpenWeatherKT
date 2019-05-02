@@ -18,20 +18,20 @@ package com.slobodanantonijevic.simpleopenweatherkt
 
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.slobodanantonijevic.simpleopenweatherkt.ui.MainActivity
 import com.slobodanantonijevic.simpleopenweatherkt.ui.MainActivity.Companion.FORECAST_WEATHER
 import com.slobodanantonijevic.simpleopenweatherkt.util.SharedPrefManager
 import retrofit2.HttpException
-import javax.inject.Inject
 
 abstract class WeatherActivity : AppCompatActivity() {
 
-//    @Inject
     lateinit var sharedPrefManager: SharedPrefManager
 
-    lateinit var location: String
+    var location: String? = null
     var locationId: Int? = null
 
     /**
@@ -49,6 +49,7 @@ abstract class WeatherActivity : AppCompatActivity() {
      */
     fun handleError(error: Throwable, occurrence: Int) {
 
+        Log.e(MainActivity.TAG, "ERROR BROTHA!!!")
         // TODO: make some more meaningful error handling
         var message = "WEATHER: Something is not right buddy!" // default
 
@@ -77,12 +78,12 @@ abstract class WeatherActivity : AppCompatActivity() {
     /**
      *
      */
-    fun buildLocationError(location: String): AlertDialog {
+    fun buildLocationError(location: String?): AlertDialog {
 
         val alertDialog = AlertDialog.Builder(this).create()
         alertDialog.setTitle(R.string.alert_title_location_error)
 
-        val message = R.string.alert_text_location_error.toString().replace("{location}", location)
+        val message = getString(R.string.alert_text_location_error).replace("{location}", location!!)
         alertDialog.setMessage(message)
 
         return alertDialog
@@ -101,7 +102,7 @@ abstract class WeatherActivity : AppCompatActivity() {
 
         val alertDialog = builder.create()
         alertDialog.setTitle(R.string.alert_title_location_search)
-        alertDialog.setMessage(R.string.alert_text_location_search.toString())
+        alertDialog.setMessage(getString(R.string.alert_text_location_search))
 
         return alertDialog
     }
@@ -109,5 +110,5 @@ abstract class WeatherActivity : AppCompatActivity() {
     /**
      *
      */
-    abstract fun locationError(location: String)
+    abstract fun locationError(location: String?)
 }

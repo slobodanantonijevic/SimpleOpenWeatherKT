@@ -30,10 +30,13 @@ import com.slobodanantonijevic.simpleopenweatherkt.model.CurrentWeather
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.HUMIDITY
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.PRESSURE
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.TEMPERATURE
+import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.WIND
+import com.slobodanantonijevic.simpleopenweatherkt.util.SharedPrefManager
 import dagger.android.AndroidInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.template_current_weather.*
 import kotlinx.android.synthetic.main.template_current_weather.city
 import javax.inject.Inject
@@ -60,11 +63,14 @@ class MainActivity : WeatherActivity() {
         setContentView(R.layout.activity_main)
 
         AndroidInjection.inject(this@MainActivity)
+        sharedPrefManager = SharedPrefManager(this@MainActivity)
 
         currentWeatherViewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(CurrentWeatherViewModel::class.java)
 
-        //TODO: [ForecastViewModel]
+        // TODO: [ForecastViewModel]
+
+        searchButton.setOnClickListener { openTheLocationDialog() }
     }
 
     /**
@@ -74,6 +80,8 @@ class MainActivity : WeatherActivity() {
         super.onStart()
 
         listenToCurrentWeather()
+        // TODO: Listen for the Forecast
+        checkTheLocation()
     }
 
     /**
@@ -81,13 +89,20 @@ class MainActivity : WeatherActivity() {
      */
     private fun listenToCurrentWeather() {
 
-        Log.e(TAG, "LISTEN TO ME!!")
         disposable.add(currentWeatherViewModel.currentWeather(locationId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                {currentWeather -> updateTheCurrentWeatherUi(currentWeather)},
-                {error -> handleError(error, CURRENT_WEATHER)}))
+                { currentWeather ->
+                    Log.e(TAG, "HERE I AM")
+                    if (currentWeather != null) {
+
+                        updateTheCurrentWeatherUi(currentWeather)
+                    } else {
+
+                        openTheLocationDialog()
+                    } },
+                { error -> handleError(error, CURRENT_WEATHER) }))
     }
 
     /**
@@ -102,6 +117,8 @@ class MainActivity : WeatherActivity() {
             .subscribe(
                 { currentWeather ->
 
+                    Log.e(TAG, "HERE I AM NOW")
+                    Log.e(TAG, currentWeather.toString())
                     // This (locationId == null) means we have the new city and need new disposables
                     if (locationId == null) {
 
@@ -113,9 +130,25 @@ class MainActivity : WeatherActivity() {
                         listenToCurrentWeather()
                         // TODO: Forecast too
                     }
-                    currentWeatherViewModel.updateWeatherData(currentWeather)
+
+                    updateTheCurrentWeather(currentWeather)
+
                 },
                 { error -> handleError(error, CURRENT_WEATHER) }))
+    }
+
+    /**
+     *
+     */
+    private fun updateTheCurrentWeather(weather: CurrentWeather) {
+
+        disposable.add(currentWeatherViewModel.updateWeatherData(weather)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                searchButton.isEnabled = true // TODO: Refresh button enabled too
+                },
+                { error -> Log.e(TAG, "Unable to update username", error) }))
     }
 
     /**
@@ -126,6 +159,8 @@ class MainActivity : WeatherActivity() {
 
         currentWeather.let {
 
+            // TODO: Header section too please
+
             currentWeather.main.let { mainData ->
 
                 currentTemperature.text = "${mainData.temp} $TEMPERATURE"
@@ -135,7 +170,7 @@ class MainActivity : WeatherActivity() {
                 maxTemp.text = "${mainData.tempMax} $TEMPERATURE"
             }
 
-            currentWeather.wind.let { windData -> wind.text = "${windData.speed} $TEMPERATURE" }
+            currentWeather.wind.let { windData -> wind.text = "${windData.speed} $WIND" }
 
             currentWeather.weather.let { weatherList ->
 
@@ -157,11 +192,11 @@ class MainActivity : WeatherActivity() {
     /**
      *
      */
-    override fun locationError(location: String) {
+    override fun locationError(location: String?) {
 
         val alertDialog = buildLocationError(location)
         alertDialog.setButton(
-            AlertDialog.BUTTON_NEUTRAL, R.string.alert_button_ok.toString()) { dialog, _ ->
+            AlertDialog.BUTTON_NEUTRAL, getString(R.string.alert_button_ok)) { dialog, _ ->
 
             openTheLocationDialog()
             dialog.dismiss()
@@ -172,16 +207,17 @@ class MainActivity : WeatherActivity() {
     /**
      *
      */
-    fun openTheLocationDialog() {
+    private fun openTheLocationDialog() {
 
         val alertDialog = buildTheLocationDialog()
         alertDialog.setButton(
-            AlertDialog.BUTTON_NEUTRAL, R.string.alert_button_location_search.toString()) { dialog, which ->
+            AlertDialog.BUTTON_NEUTRAL, getString(R.string.alert_button_location_search)) { dialog, _ ->
 
+            Log.e(TAG, "BOO")
             val cityField = alertDialog.city
             location = cityField.text.toString()
             locationId = null
-            sharedPrefManager.saveTheCity(location)
+            sharedPrefManager.saveTheCity(location!!)
             sharedPrefManager.eliminateTheSavedCity()
 
             getFreshWeather(locationId, location)
@@ -189,6 +225,17 @@ class MainActivity : WeatherActivity() {
             dialog.dismiss()
         }
         alertDialog.show()
+    }
+
+    /**
+     *
+     */
+    private fun checkTheLocation() {
+
+        if (locationId == null && location == null) {
+
+            openTheLocationDialog()
+        }
     }
 
     /**
@@ -207,6 +254,6 @@ class MainActivity : WeatherActivity() {
         const val CURRENT_WEATHER = 1
         const val FORECAST_WEATHER = 2
 
-        private val TAG = MainActivity::class.java.simpleName
+        val TAG = MainActivity::class.java.simpleName
     }
 }

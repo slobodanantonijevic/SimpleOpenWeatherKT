@@ -7,8 +7,12 @@ import javax.inject.Inject
 
 class SharedPrefManager(val context: Context) {
 
-//    @Inject
-    lateinit var pref: SharedPreferences
+    var pref: SharedPreferences
+
+    init {
+
+        pref = context.getSharedPreferences(BASIC_CONFIG_FILE, Context.MODE_PRIVATE)
+    }
 
     /**
      *
