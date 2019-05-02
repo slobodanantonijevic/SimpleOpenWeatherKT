@@ -56,10 +56,6 @@ class CurrentWeatherViewModel @Inject constructor (
     fun getFreshWeather(cityId: Int?, cityName: String?): Single<CurrentWeather> {
 
         return api.getCurrentWeather(cityId, cityName)
-            .doOnSuccess {
-                    currentWeather -> updateWeatherData(currentWeather)}
-            .doOnError{
-                    error -> /* TODO: Handle error */}
     }
 
     /**

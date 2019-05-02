@@ -18,6 +18,9 @@
 package com.slobodanantonijevic.simpleopenweatherkt.di
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
+import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.slobodanantonijevic.simpleopenweatherkt.api.OpenWeatherApi
 import com.slobodanantonijevic.simpleopenweatherkt.api.OpenWeatherApi.Companion.BASE_URL
@@ -25,6 +28,8 @@ import com.slobodanantonijevic.simpleopenweatherkt.db.CurrentWeatherDao
 import com.slobodanantonijevic.simpleopenweatherkt.db.ForecastDao
 import com.slobodanantonijevic.simpleopenweatherkt.db.WeatherDb
 import com.slobodanantonijevic.simpleopenweatherkt.db.WeatherDb.Companion.DB_NAME
+import com.slobodanantonijevic.simpleopenweatherkt.util.SharedPrefManager
+import com.slobodanantonijevic.simpleopenweatherkt.util.SharedPrefManager.Companion.BASIC_CONFIG_FILE
 import dagger.Module
 import dagger.Provides
 import io.reactivex.schedulers.Schedulers
@@ -50,6 +55,20 @@ class AppModule {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .build()
             .create(OpenWeatherApi::class.java);
+    }
+
+    @Singleton
+    @Provides
+    fun provideSharedPrefManager(activity: AppCompatActivity): SharedPrefManager {
+
+        return SharedPrefManager(activity)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(context: Context): SharedPreferences {
+
+        return context.getSharedPreferences(BASIC_CONFIG_FILE, Context.MODE_PRIVATE)
     }
 
     @Singleton

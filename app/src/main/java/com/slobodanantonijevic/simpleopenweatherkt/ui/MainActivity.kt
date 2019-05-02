@@ -17,15 +17,23 @@
 
 package com.slobodanantonijevic.simpleopenweatherkt.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
 import com.slobodanantonijevic.simpleopenweatherkt.R
 import com.slobodanantonijevic.simpleopenweatherkt.WeatherActivity
 import com.slobodanantonijevic.simpleopenweatherkt.model.CurrentWeather
+import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.HUMIDITY
+import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.PRESSURE
+import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.TEMPERATURE
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.template_current_weather.*
+import kotlinx.android.synthetic.main.template_current_weather.city
 import javax.inject.Inject
 
 class MainActivity : WeatherActivity() {
@@ -37,6 +45,9 @@ class MainActivity : WeatherActivity() {
     private lateinit var forecastViewModel: ForecastViewModel
 
     private var disposable = CompositeDisposable()
+
+    private var cityId: Int? = null
+    private lateinit var cityName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -62,12 +73,78 @@ class MainActivity : WeatherActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {currentWeather -> updateTheCurrentWeatherUi(currentWeather)},
-                {error -> handleError(error)}))
+                {error -> handleError(error, CURRENT_WEATHER)}))
     }
 
+    private fun getFreshWeather() {
+
+        //TODO: disable the refresh and search buttons
+        disposable.add(currentWeatherViewModel.getFreshWeather(1, null)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { currentWeather -> currentWeatherViewModel.updateWeatherData(currentWeather) },
+                { error -> handleError(error, CURRENT_WEATHER) }))
+    }
+
+
+    @SuppressLint("SetTextI18n")
     private fun updateTheCurrentWeatherUi(currentWeather: CurrentWeather) {
 
+        currentWeather.let {
 
+            currentWeather.main.let { mainData ->
+
+                currentTemperature.text = "${mainData.temp} $TEMPERATURE"
+                pressure.text = "${mainData.pressure} $PRESSURE"
+                humidity.text = "${mainData.humidity} $HUMIDITY"
+                minTemp.text = "${mainData.tempMin} $TEMPERATURE"
+                maxTemp.text = "${mainData.tempMax} $TEMPERATURE"
+            }
+
+            currentWeather.wind.let { windData -> wind.text = "${windData.speed} $TEMPERATURE" }
+
+            currentWeather.weather.let { weatherList ->
+
+                if (weatherList.count() > 0) {
+
+                    weatherList.get(0).let { weather ->
+
+                        val weatherImageResId = weather.findWeatherIcon(weather.id)
+
+                        Glide.with(this)
+                            .load(weatherImageResId)
+                            .into(weatherIcon)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun locationError(location: String) {
+
+        val alertDialog = buildLocationError(location)
+        alertDialog.setButton(
+            AlertDialog.BUTTON_NEUTRAL, R.string.alert_button_ok.toString()) { dialog, which ->
+
+            openTheLocationDialog()
+            dialog.dismiss()
+        }
+        alertDialog.show()
+    }
+
+    fun openTheLocationDialog() {
+
+        val alertDialog = buildTheLocationDialog()
+        alertDialog.setButton(
+            AlertDialog.BUTTON_NEUTRAL, R.string.alert_button_location_search.toString()) { dialog, which ->
+
+            val cityField = alertDialog.city
+            sharedPrefManager.saveTheCity(cityField.text.toString())
+            sharedPrefManager.eliminateTheSavedCity()
+            dialog.dismiss()
+        }
+        alertDialog.show()
     }
 
     override fun onStop() {
@@ -76,5 +153,11 @@ class MainActivity : WeatherActivity() {
 
         // Clear all of the subscriptions
         disposable.clear()
+    }
+
+    companion object {
+
+        const val CURRENT_WEATHER = 1
+        const val FORECAST_WEATHER = 2
     }
 }

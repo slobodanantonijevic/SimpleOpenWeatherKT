@@ -43,4 +43,17 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.5" />
 
+    <Button
+            android:text="@string/title_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/search"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
