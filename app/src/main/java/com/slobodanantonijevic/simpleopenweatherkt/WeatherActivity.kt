@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 abstract class WeatherActivity : AppCompatActivity() {
 
-    @Inject
+//    @Inject
     lateinit var sharedPrefManager: SharedPrefManager
 
     lateinit var location: String
@@ -54,8 +54,7 @@ abstract class WeatherActivity : AppCompatActivity() {
 
         if (error is HttpException && occurrence != FORECAST_WEATHER) {
 
-            val response = error as HttpException
-            val code = response.code()
+            val code = error.code()
 
             when (code) {
 

@@ -156,7 +156,7 @@ class MainActivity : WeatherActivity() {
 
         val alertDialog = buildLocationError(location)
         alertDialog.setButton(
-            AlertDialog.BUTTON_NEUTRAL, R.string.alert_button_ok.toString()) { dialog, which ->
+            AlertDialog.BUTTON_NEUTRAL, R.string.alert_button_ok.toString()) { dialog, _ ->
 
             openTheLocationDialog()
             dialog.dismiss()

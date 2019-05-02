@@ -42,7 +42,7 @@ import javax.inject.Singleton
  * Module to provide the Dagger all the necessary elements for our data flow
  * Such as Retrofit built client to fetch the fresh data, and Room DB and DAOs for data persistence
  */
-@Module(includes = arrayOf(ViewModelModule::class))
+@Module(includes = [ViewModelModule::class])
 class AppModule {
 
     @Singleton
@@ -59,35 +59,21 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideSharedPrefManager(activity: AppCompatActivity): SharedPrefManager {
-
-        return SharedPrefManager(activity)
-    }
-
-    @Singleton
-    @Provides
-    fun provideSharedPreferences(context: Context): SharedPreferences {
-
-        return context.getSharedPreferences(BASIC_CONFIG_FILE, Context.MODE_PRIVATE)
-    }
-
-    @Singleton
-    @Provides
-    fun provideDb(app: Application) : WeatherDb {
+    fun provideDb(app: Application): WeatherDb {
 
         return Room.databaseBuilder(app, WeatherDb::class.java, DB_NAME).build()
     }
 
     @Singleton
     @Provides
-    fun provideCurrentWeatherDao(db: WeatherDb) : CurrentWeatherDao {
+    fun provideCurrentWeatherDao(db: WeatherDb): CurrentWeatherDao {
 
         return db.currentWeatherDao()
     }
 
     @Singleton
     @Provides
-    fun provideForecastDao(db: WeatherDb) : ForecastDao {
+    fun provideForecastDao(db: WeatherDb): ForecastDao {
 
         return db.forecastDao()
     }

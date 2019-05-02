@@ -2,9 +2,7 @@ package com.slobodanantonijevic.simpleopenweatherkt
 
 import android.app.Activity
 import android.app.Application
-import android.util.Log
 import com.slobodanantonijevic.simpleopenweatherkt.di.DaggerAppComponent
-import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import javax.inject.Inject
@@ -22,7 +20,6 @@ class App : Application(), HasActivityInjector {
             .builder()
             .application(this)
             .build()
-            .inject(this)
     }
 
     override fun activityInjector(): DispatchingAndroidInjector<Activity> {

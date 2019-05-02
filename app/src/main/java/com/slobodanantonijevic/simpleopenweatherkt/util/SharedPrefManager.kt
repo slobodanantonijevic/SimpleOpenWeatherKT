@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class SharedPrefManager(val context: Context) {
 
-    @Inject
+//    @Inject
     lateinit var pref: SharedPreferences
 
     /**

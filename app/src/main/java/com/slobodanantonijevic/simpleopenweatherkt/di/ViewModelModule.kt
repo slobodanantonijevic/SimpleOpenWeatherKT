@@ -24,6 +24,9 @@ import com.slobodanantonijevic.simpleopenweatherkt.ui.ForecastViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import dagger.Provides
+import javax.inject.Provider
+
 
 /**
  * ViewModelModule is responsible for binding all over ViewModel classes into a Map
@@ -33,16 +36,16 @@ import dagger.multibindings.IntoMap
 abstract class ViewModelModule {
 
     @Binds
-    abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory) : ViewModelProvider.Factory
+    abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
     // We are able to declare ViewModelProvider.Factory dependency in another module. For example in ApplicationModule
 
     @Binds
     @IntoMap
     @ViewModelKey(CurrentWeatherViewModel::class)
-    abstract fun bindCurrentViewModel(currentWeatherViewModel: CurrentWeatherViewModel) : ViewModel
+    abstract fun bindCurrentViewModel(currentWeatherViewModel: CurrentWeatherViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(ForecastViewModel::class)
-    abstract fun bindForecastViewModel(forecastViewModel: ForecastViewModel) : ViewModel
+    abstract fun bindForecastViewModel(forecastViewModel: ForecastViewModel): ViewModel
 }

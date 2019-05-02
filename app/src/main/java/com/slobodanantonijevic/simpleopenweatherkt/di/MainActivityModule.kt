@@ -19,6 +19,7 @@ package com.slobodanantonijevic.simpleopenweatherkt.di
 
 import com.slobodanantonijevic.simpleopenweatherkt.ui.MainActivity
 import dagger.Module
+import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 
 /**
