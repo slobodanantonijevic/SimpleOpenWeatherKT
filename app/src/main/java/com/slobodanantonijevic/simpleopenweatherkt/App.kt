@@ -18,8 +18,9 @@ class App : Application(), HasActivityInjector {
 
         DaggerAppComponent
             .builder()
-            .application(this)
+            .application(this@App)
             .build()
+            .inject(this@App)
     }
 
     override fun activityInjector(): DispatchingAndroidInjector<Activity> {
