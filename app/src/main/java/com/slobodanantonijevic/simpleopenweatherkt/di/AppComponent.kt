@@ -17,21 +17,17 @@
 package com.slobodanantonijevic.simpleopenweatherkt.di
 
 import android.app.Application
-import androidx.lifecycle.ViewModel
 import com.slobodanantonijevic.simpleopenweatherkt.App
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
-import dagger.android.AndroidInjector
-import dagger.android.support.AndroidSupportInjectionModule
-import javax.inject.Provider
 import javax.inject.Singleton
 
 /**
  * Component to instruct Dagger what modules to look for and how to build Component instance
  */
 @Singleton
-@Component(modules = [AndroidSupportInjectionModule::class, AndroidInjectionModule::class, MainActivityModule::class, AppModule::class])
+@Component(modules = [AndroidInjectionModule::class, MainActivityModule::class, AppModule::class])
 interface AppComponent {
 
     @Component.Builder

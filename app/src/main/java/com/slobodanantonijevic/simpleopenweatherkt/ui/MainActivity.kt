@@ -19,6 +19,7 @@ package com.slobodanantonijevic.simpleopenweatherkt.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -29,6 +30,7 @@ import com.slobodanantonijevic.simpleopenweatherkt.model.CurrentWeather
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.HUMIDITY
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.PRESSURE
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.TEMPERATURE
+import dagger.android.AndroidInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -56,6 +58,9 @@ class MainActivity : WeatherActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        AndroidInjection.inject(this@MainActivity)
+
         currentWeatherViewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(CurrentWeatherViewModel::class.java)
 
@@ -76,6 +81,7 @@ class MainActivity : WeatherActivity() {
      */
     private fun listenToCurrentWeather() {
 
+        Log.e(TAG, "LISTEN TO ME!!")
         disposable.add(currentWeatherViewModel.currentWeather(locationId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -200,5 +206,7 @@ class MainActivity : WeatherActivity() {
 
         const val CURRENT_WEATHER = 1
         const val FORECAST_WEATHER = 2
+
+        private val TAG = MainActivity::class.java.simpleName
     }
 }
