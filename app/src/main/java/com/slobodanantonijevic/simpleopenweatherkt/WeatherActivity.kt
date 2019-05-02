@@ -32,8 +32,11 @@ abstract class WeatherActivity : AppCompatActivity() {
     lateinit var sharedPrefManager: SharedPrefManager
 
     lateinit var location: String
-    var locationId: Int = -1
+    var locationId: Int? = null
 
+    /**
+     *
+     */
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
 
@@ -41,6 +44,9 @@ abstract class WeatherActivity : AppCompatActivity() {
         locationId = sharedPrefManager.getSavedCity()
     }
 
+    /**
+     *
+     */
     fun handleError(error: Throwable, occurrence: Int) {
 
         // TODO: make some more meaningful error handling
@@ -69,6 +75,9 @@ abstract class WeatherActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     *
+     */
     fun buildLocationError(location: String): AlertDialog {
 
         val alertDialog = AlertDialog.Builder(this).create()
@@ -80,6 +89,9 @@ abstract class WeatherActivity : AppCompatActivity() {
         return alertDialog
     }
 
+    /**
+     *
+     */
     fun buildTheLocationDialog(): AlertDialog {
 
         val builder = AlertDialog.Builder(this)
@@ -95,5 +107,8 @@ abstract class WeatherActivity : AppCompatActivity() {
         return alertDialog
     }
 
+    /**
+     *
+     */
     abstract fun locationError(location: String)
 }

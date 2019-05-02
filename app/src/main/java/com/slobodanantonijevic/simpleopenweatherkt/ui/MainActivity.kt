@@ -49,6 +49,9 @@ class MainActivity : WeatherActivity() {
     private var cityId: Int? = null
     private lateinit var cityName: String
 
+    /**
+     *
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -60,15 +63,21 @@ class MainActivity : WeatherActivity() {
         //TODO: [ForecastViewModel]
     }
 
+    /**
+     *
+     */
     override fun onStart() {
         super.onStart()
 
         listenToCurrentWeather()
     }
 
+    /**
+     *
+     */
     private fun listenToCurrentWeather() {
 
-        disposable.add(currentWeatherViewModel.currentWeather(1)
+        disposable.add(currentWeatherViewModel.currentWeather(locationId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -76,18 +85,37 @@ class MainActivity : WeatherActivity() {
                 {error -> handleError(error, CURRENT_WEATHER)}))
     }
 
-    private fun getFreshWeather() {
+    /**
+     *
+     */
+    private fun getFreshWeather(id: Int?, name: String?) {
 
         //TODO: disable the refresh and search buttons
-        disposable.add(currentWeatherViewModel.getFreshWeather(1, null)
+        disposable.add(currentWeatherViewModel.getFreshWeather(id, name)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { currentWeather -> currentWeatherViewModel.updateWeatherData(currentWeather) },
+                { currentWeather ->
+
+                    // This (locationId == null) means we have the new city and need new disposables
+                    if (locationId == null) {
+
+                        disposable.clear()
+                        locationId = currentWeather.id
+                        location = currentWeather.name
+
+                        // Reset the listeners
+                        listenToCurrentWeather()
+                        // TODO: Forecast too
+                    }
+                    currentWeatherViewModel.updateWeatherData(currentWeather)
+                },
                 { error -> handleError(error, CURRENT_WEATHER) }))
     }
 
-
+    /**
+     *
+     */
     @SuppressLint("SetTextI18n")
     private fun updateTheCurrentWeatherUi(currentWeather: CurrentWeather) {
 
@@ -121,6 +149,9 @@ class MainActivity : WeatherActivity() {
         }
     }
 
+    /**
+     *
+     */
     override fun locationError(location: String) {
 
         val alertDialog = buildLocationError(location)
@@ -133,6 +164,9 @@ class MainActivity : WeatherActivity() {
         alertDialog.show()
     }
 
+    /**
+     *
+     */
     fun openTheLocationDialog() {
 
         val alertDialog = buildTheLocationDialog()
@@ -140,13 +174,21 @@ class MainActivity : WeatherActivity() {
             AlertDialog.BUTTON_NEUTRAL, R.string.alert_button_location_search.toString()) { dialog, which ->
 
             val cityField = alertDialog.city
-            sharedPrefManager.saveTheCity(cityField.text.toString())
+            location = cityField.text.toString()
+            locationId = null
+            sharedPrefManager.saveTheCity(location)
             sharedPrefManager.eliminateTheSavedCity()
+
+            getFreshWeather(locationId, location)
+
             dialog.dismiss()
         }
         alertDialog.show()
     }
 
+    /**
+     *
+     */
     override fun onStop() {
 
         super.onStop()

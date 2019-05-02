@@ -1,6 +1,7 @@
 package com.slobodanantonijevic.simpleopenweatherkt.di
 
 import android.app.Application
+import com.slobodanantonijevic.simpleopenweatherkt.App
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -21,4 +22,6 @@ interface AppComponent {
 
         fun build(): AppComponent
     }
+
+    fun inject(app: App)
 }

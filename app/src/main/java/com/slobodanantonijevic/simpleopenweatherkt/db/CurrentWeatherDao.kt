@@ -32,5 +32,5 @@ interface CurrentWeatherDao {
     fun insert(currentWeather: CurrentWeather) : Completable
 
     @Query("SELECT * FROM currentweather WHERE id = :id")
-    fun findById(id: Int) : Flowable<CurrentWeather>
+    fun findById(id: Int?) : Flowable<CurrentWeather>
 }

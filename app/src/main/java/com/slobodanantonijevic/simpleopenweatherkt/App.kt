@@ -3,6 +3,7 @@ package com.slobodanantonijevic.simpleopenweatherkt
 import android.app.Activity
 import android.app.Application
 import android.util.Log
+import com.slobodanantonijevic.simpleopenweatherkt.di.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -17,11 +18,15 @@ class App : Application(), HasActivityInjector {
 
         super.onCreate()
 
-        Log.e("BOO", "HOO")
+        DaggerAppComponent
+            .builder()
+            .application(this)
+            .build()
+            .inject(this)
     }
 
     override fun activityInjector(): DispatchingAndroidInjector<Activity> {
 
-        return dispatchingAndroidInjector!!
+        return dispatchingAndroidInjector
     }
 }

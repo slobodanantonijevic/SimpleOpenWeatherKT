@@ -38,7 +38,7 @@ class CurrentWeatherViewModel @Inject constructor (
      *
      * @return  a [Flowable] that emits every time the data has been updated
      */
-    fun currentWeather(cityId: Int): Flowable<CurrentWeather> {
+    fun currentWeather(cityId: Int?): Flowable<CurrentWeather> {
 
         return currentWeatherDao.findById(cityId)
     }
