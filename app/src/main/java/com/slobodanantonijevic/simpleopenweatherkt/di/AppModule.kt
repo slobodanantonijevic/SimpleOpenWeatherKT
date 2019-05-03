@@ -61,20 +61,6 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideZoneId(): ZoneId {
-
-        return ZoneId.systemDefault()
-    }
-
-    @Singleton
-    @Provides
-    fun provideTimeFormatter(zoneId: ZoneId): TimeFormatter {
-
-        return TimeFormatter(zoneId)
-    }
-
-    @Singleton
-    @Provides
     fun provideDb(app: Application): WeatherDb {
 
         return Room.databaseBuilder(app, WeatherDb::class.java, DB_NAME).build()

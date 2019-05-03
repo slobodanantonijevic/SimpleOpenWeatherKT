@@ -31,6 +31,7 @@ import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.HUMID
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.PRESSURE
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.TEMPERATURE
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.WIND
+import com.slobodanantonijevic.simpleopenweatherkt.util.NumberUtil
 import com.slobodanantonijevic.simpleopenweatherkt.util.SharedPrefManager
 import com.slobodanantonijevic.simpleopenweatherkt.util.TimeFormatter
 import dagger.android.AndroidInjection
@@ -49,6 +50,9 @@ class MainActivity : WeatherActivity() {
 
     @Inject
     lateinit var timeFormatter: TimeFormatter
+
+    @Inject
+    lateinit var numUtil: NumberUtil
 
     private lateinit var currentWeatherViewModel: CurrentWeatherViewModel
     private lateinit var forecastViewModel: ForecastViewModel
@@ -169,11 +173,11 @@ class MainActivity : WeatherActivity() {
 
             currentWeather.main.let { mainData ->
 
-                currentTemperature.text = "${mainData.temp} $TEMPERATURE"
+                currentTemperature.text = "${numUtil.roundTheTemp(mainData.temp)} $TEMPERATURE"
                 pressure.text = "${mainData.pressure} $PRESSURE"
                 humidity.text = "${mainData.humidity} $HUMIDITY"
-                minTemp.text = "${mainData.tempMin} $TEMPERATURE"
-                maxTemp.text = "${mainData.tempMax} $TEMPERATURE"
+                minTemp.text = "${numUtil.roundTheTemp(mainData.tempMin)} $TEMPERATURE"
+                maxTemp.text = "${numUtil.roundTheTemp(mainData.tempMax)} $TEMPERATURE"
             }
 
             currentWeather.wind.let { windData -> wind.text = "${windData.speed} $WIND" }

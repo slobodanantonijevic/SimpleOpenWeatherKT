@@ -27,7 +27,11 @@ import javax.inject.Singleton
  * Component to instruct Dagger what modules to look for and how to build Component instance
  */
 @Singleton
-@Component(modules = [AndroidInjectionModule::class, MainActivityModule::class, AppModule::class])
+@Component(modules = [
+    AndroidInjectionModule::class,
+    MainActivityModule::class,
+    AppModule::class,
+    UtilsModule::class])
 interface AppComponent {
 
     @Component.Builder
