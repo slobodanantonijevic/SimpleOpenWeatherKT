@@ -31,6 +31,7 @@ import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.HUMID
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.PRESSURE
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.TEMPERATURE
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.WIND
+import com.slobodanantonijevic.simpleopenweatherkt.util.Animations
 import com.slobodanantonijevic.simpleopenweatherkt.util.NumberUtil
 import com.slobodanantonijevic.simpleopenweatherkt.util.SharedPrefManager
 import com.slobodanantonijevic.simpleopenweatherkt.util.TimeFormatter
@@ -119,7 +120,8 @@ class MainActivity : WeatherActivity() {
      */
     private fun getFreshWeather(id: Int?, name: String?) {
 
-        //TODO: rotate refresh
+        //TODO: rotate refresh?
+        Animations.rotate(this@MainActivity, refreshWeather)
         refreshWeather.isEnabled = false
         searchButton.isEnabled = false
         disposable.add(currentWeatherViewModel.getFreshWeather(id, name)
@@ -159,7 +161,8 @@ class MainActivity : WeatherActivity() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                searchButton.isEnabled = true // TODO: Refresh button stop animation
+                searchButton.isEnabled = true // TODO: Refresh button stop animation?
+                refreshWeather.clearAnimation()
                 refreshWeather.isEnabled = true
                 },
                 { error -> Log.e(TAG, "Unable to update username", error) }))
