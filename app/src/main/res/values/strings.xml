@@ -3,6 +3,7 @@
     <string name="title_hourly_forecast">Hourly</string>
     <string name="title_daily_forecast">Daily</string>
     <string name="title_search">Search Location</string>
+    <string name="refresh_weather">Refresh The Weather</string>
 
     <string name="location_id_key">locationId</string>
     <string name="location_name_key">locationName</string>

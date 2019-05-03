@@ -37,19 +37,8 @@ abstract class WeatherActivity : AppCompatActivity() {
     /**
      *
      */
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-
-        location = sharedPrefManager.getSavedCityName()
-        locationId = sharedPrefManager.getSavedCity()
-    }
-
-    /**
-     *
-     */
     fun handleError(error: Throwable, occurrence: Int) {
 
-        Log.e(MainActivity.TAG, "ERROR BROTHA!!!")
         // TODO: make some more meaningful error handling
         var message = "WEATHER: Something is not right buddy!" // default
 

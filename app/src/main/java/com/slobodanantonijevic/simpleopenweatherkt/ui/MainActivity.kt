@@ -59,9 +59,6 @@ class MainActivity : WeatherActivity() {
 
     private var disposable = CompositeDisposable()
 
-    private var cityId: Int? = null
-    private lateinit var cityName: String
-
     /**
      *
      */
@@ -73,12 +70,16 @@ class MainActivity : WeatherActivity() {
         AndroidInjection.inject(this@MainActivity)
         sharedPrefManager = SharedPrefManager(this@MainActivity)
 
+        location = sharedPrefManager.getSavedCityName()
+        locationId = sharedPrefManager.getSavedCity()
+
         currentWeatherViewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(CurrentWeatherViewModel::class.java)
 
         // TODO: [ForecastViewModel]
 
         searchButton.setOnClickListener { openTheLocationDialog() }
+        refreshWeather.setOnClickListener { getFreshWeather(locationId, null) }
     }
 
     /**
@@ -118,7 +119,9 @@ class MainActivity : WeatherActivity() {
      */
     private fun getFreshWeather(id: Int?, name: String?) {
 
-        //TODO: disable the refresh and search buttons
+        //TODO: rotate refresh
+        refreshWeather.isEnabled = false
+        searchButton.isEnabled = false
         disposable.add(currentWeatherViewModel.getFreshWeather(id, name)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -133,6 +136,8 @@ class MainActivity : WeatherActivity() {
                         disposable.clear()
                         locationId = currentWeather.id
                         location = currentWeather.name
+
+                        sharedPrefManager.saveTheCity(locationId!!)
 
                         // Reset the listeners
                         listenToCurrentWeather()
@@ -154,7 +159,8 @@ class MainActivity : WeatherActivity() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                searchButton.isEnabled = true // TODO: Refresh button enabled too
+                searchButton.isEnabled = true // TODO: Refresh button stop animation
+                refreshWeather.isEnabled = true
                 },
                 { error -> Log.e(TAG, "Unable to update username", error) }))
     }
