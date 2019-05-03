@@ -31,7 +31,7 @@ import javax.inject.Singleton
  * https://github.com/JakeWharton/ThreeTenABP
  */
 @Singleton
-class TimeFormatter @Inject constructor(val zoneId: ZoneId) {
+class TimeFormatter @Inject constructor(private val zoneId: ZoneId) {
 
     private fun zonedDateTime(unixDateTime: Int): ZonedDateTime {
 

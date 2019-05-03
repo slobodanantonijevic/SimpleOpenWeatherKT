@@ -1,4 +1,4 @@
-package com.slobodanantonijevic.simpleopenweatherkt
+package com.slobodanantonijevic.simpleopenweatherkt.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.slobodanantonijevic.simpleopenweatherkt.api.OpenWeatherApi

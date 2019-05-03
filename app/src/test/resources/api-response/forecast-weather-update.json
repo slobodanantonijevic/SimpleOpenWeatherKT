@@ -1,0 +1,190 @@
+{
+  "city": {
+    "id": 2643743,
+    "name": "London",
+    "coord": {
+      "lon": -0.1277,
+      "lat": 51.5073
+    },
+    "country": "GB",
+    "population": 1000000
+  },
+  "cod": "200",
+  "message": 0.05236,
+  "cnt": 7,
+  "list": [
+    {
+      "dt": 1556881200,
+      "temp": {
+        "day": 12.02,
+        "min": 6.6,
+        "max": 13.99,
+        "night": 6.6,
+        "eve": 10.88,
+        "morn": 10.14
+      },
+      "pressure": 1014.95,
+      "humidity": 56,
+      "weather": [
+        {
+          "id": 500,
+          "main": "Rain",
+          "description": "light rain",
+          "icon": "10d"
+        }
+      ],
+      "speed": 2.24,
+      "deg": 282,
+      "clouds": 66,
+      "rain": 1.75
+    },
+    {
+      "dt": 1556967600,
+      "temp": {
+        "day": 10.25,
+        "min": 4.75,
+        "max": 10.85,
+        "night": 5.05,
+        "eve": 9.05,
+        "morn": 4.75
+      },
+      "pressure": 1019.95,
+      "humidity": 42,
+      "weather": [
+        {
+          "id": 500,
+          "main": "Rain",
+          "description": "light rain",
+          "icon": "10d"
+        }
+      ],
+      "speed": 7.27,
+      "deg": 358,
+      "clouds": 18,
+      "rain": 0.81
+    },
+    {
+      "dt": 1557054000,
+      "temp": {
+        "day": 10.95,
+        "min": 4.08,
+        "max": 11.43,
+        "night": 6.38,
+        "eve": 10.26,
+        "morn": 4.08
+      },
+      "pressure": 1026.02,
+      "humidity": 41,
+      "weather": [
+        {
+          "id": 801,
+          "main": "Clouds",
+          "description": "few clouds",
+          "icon": "02d"
+        }
+      ],
+      "speed": 3.7,
+      "deg": 344,
+      "clouds": 14
+    },
+    {
+      "dt": 1557140400,
+      "temp": {
+        "day": 12.45,
+        "min": 5.45,
+        "max": 12.45,
+        "night": 7.48,
+        "eve": 11.17,
+        "morn": 5.45
+      },
+      "pressure": 1021.99,
+      "humidity": 41,
+      "weather": [
+        {
+          "id": 802,
+          "main": "Clouds",
+          "description": "scattered clouds",
+          "icon": "03d"
+        }
+      ],
+      "speed": 3.48,
+      "deg": 294,
+      "clouds": 28
+    },
+    {
+      "dt": 1557226800,
+      "temp": {
+        "day": 13.25,
+        "min": 7.54,
+        "max": 13.62,
+        "night": 9.1,
+        "eve": 12.12,
+        "morn": 7.54
+      },
+      "pressure": 1012.4,
+      "humidity": 55,
+      "weather": [
+        {
+          "id": 500,
+          "main": "Rain",
+          "description": "light rain",
+          "icon": "10d"
+        }
+      ],
+      "speed": 4.09,
+      "deg": 166,
+      "clouds": 100,
+      "rain": 2.19
+    },
+    {
+      "dt": 1557313200,
+      "temp": {
+        "day": 14.55,
+        "min": 8.73,
+        "max": 15.72,
+        "night": 10.04,
+        "eve": 13.68,
+        "morn": 8.73
+      },
+      "pressure": 998.5,
+      "humidity": 52,
+      "weather": [
+        {
+          "id": 500,
+          "main": "Rain",
+          "description": "light rain",
+          "icon": "10d"
+        }
+      ],
+      "speed": 3.12,
+      "deg": 41,
+      "clouds": 90,
+      "rain": 1.31
+    },
+    {
+      "dt": 1557399600,
+      "temp": {
+        "day": 8.89,
+        "min": 8.65,
+        "max": 11.41,
+        "night": 8.65,
+        "eve": 11.41,
+        "morn": 8.65
+      },
+      "pressure": 991.91,
+      "humidity": 86,
+      "weather": [
+        {
+          "id": 501,
+          "main": "Rain",
+          "description": "moderate rain",
+          "icon": "10d"
+        }
+      ],
+      "speed": 2.48,
+      "deg": 66,
+      "clouds": 100,
+      "rain": 11.13
+    }
+  ]
+}

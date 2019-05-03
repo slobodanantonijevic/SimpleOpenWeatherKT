@@ -81,6 +81,8 @@ class MainActivity : WeatherActivity() {
 
         searchButton.setOnClickListener { openTheLocationDialog() }
         refreshWeather.setOnClickListener { getFreshWeather(locationId, null) }
+
+        Log.e(TAG, "Create")
     }
 
     /**

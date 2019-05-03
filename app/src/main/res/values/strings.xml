@@ -9,7 +9,7 @@
     <string name="location_name_key">locationName</string>
 
     <string name="alert_title_location_search">Search for location</string>
-    <string name="alert_text_location_search">You can search the desired location manually or let the app try to determine your location.</string>
+    <string name="alert_text_location_search">Enter the location name below, and hit SEARCH</string>
     <string name="alert_button_location_search">Search</string>
     <string name="alert_hint_location_search">Type the city or town name</string>
 

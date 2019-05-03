@@ -26,10 +26,7 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 
 @Dao
-interface CurrentWeatherDao {
-
-    @Insert(onConflict = REPLACE)
-    fun insert(currentWeather: CurrentWeather) : Completable
+interface CurrentWeatherDao: BaseDao<CurrentWeather> {
 
     @Query("SELECT * FROM currentweather WHERE id = :id")
     fun findById(id: Int?) : Flowable<CurrentWeather>

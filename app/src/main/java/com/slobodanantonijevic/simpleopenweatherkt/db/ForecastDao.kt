@@ -18,19 +18,13 @@
 package com.slobodanantonijevic.simpleopenweatherkt.db
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
 import com.slobodanantonijevic.simpleopenweatherkt.model.Forecast
-import io.reactivex.Completable
 import io.reactivex.Flowable
 
 @Dao
-interface ForecastDao {
-
-    @Insert(onConflict = REPLACE)
-    fun insert(forecast: Forecast) : Completable
+interface ForecastDao: BaseDao<Forecast> {
 
     @Query("SELECT * FROM forecast_daily WHERE id = :id")
-    fun findById(id: Int) : Flowable<Forecast>
+    fun findById(id: Int?) : Flowable<Forecast>
 }
