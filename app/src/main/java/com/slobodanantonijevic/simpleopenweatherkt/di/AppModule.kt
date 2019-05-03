@@ -30,9 +30,11 @@ import com.slobodanantonijevic.simpleopenweatherkt.db.WeatherDb
 import com.slobodanantonijevic.simpleopenweatherkt.db.WeatherDb.Companion.DB_NAME
 import com.slobodanantonijevic.simpleopenweatherkt.util.SharedPrefManager
 import com.slobodanantonijevic.simpleopenweatherkt.util.SharedPrefManager.Companion.BASIC_CONFIG_FILE
+import com.slobodanantonijevic.simpleopenweatherkt.util.TimeFormatter
 import dagger.Module
 import dagger.Provides
 import io.reactivex.schedulers.Schedulers
+import org.threeten.bp.ZoneId
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -55,6 +57,20 @@ class AppModule {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .build()
             .create(OpenWeatherApi::class.java);
+    }
+
+    @Singleton
+    @Provides
+    fun provideZoneId(): ZoneId {
+
+        return ZoneId.systemDefault()
+    }
+
+    @Singleton
+    @Provides
+    fun provideTimeFormatter(zoneId: ZoneId): TimeFormatter {
+
+        return TimeFormatter(zoneId)
     }
 
     @Singleton

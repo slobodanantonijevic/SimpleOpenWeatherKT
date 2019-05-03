@@ -32,6 +32,7 @@ import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.PRESS
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.TEMPERATURE
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.WIND
 import com.slobodanantonijevic.simpleopenweatherkt.util.SharedPrefManager
+import com.slobodanantonijevic.simpleopenweatherkt.util.TimeFormatter
 import dagger.android.AndroidInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -45,6 +46,9 @@ class MainActivity : WeatherActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var timeFormatter: TimeFormatter
 
     private lateinit var currentWeatherViewModel: CurrentWeatherViewModel
     private lateinit var forecastViewModel: ForecastViewModel
@@ -160,6 +164,8 @@ class MainActivity : WeatherActivity() {
         currentWeather.let {
 
             // TODO: Header section too please
+            city.text = currentWeather.name
+            date.text = timeFormatter.headerDateTime(currentWeather.dt)
 
             currentWeather.main.let { mainData ->
 
