@@ -81,8 +81,6 @@ class MainActivity : WeatherActivity() {
 
         searchButton.setOnClickListener { openTheLocationDialog() }
         refreshWeather.setOnClickListener { getFreshWeather(locationId, null) }
-
-        Log.e(TAG, "Create")
     }
 
     /**
@@ -106,7 +104,7 @@ class MainActivity : WeatherActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { currentWeather ->
-                    Log.e(TAG, "HERE I AM")
+
                     if (currentWeather != null) {
 
                         updateTheCurrentWeatherUi(currentWeather)
@@ -132,8 +130,6 @@ class MainActivity : WeatherActivity() {
             .subscribe(
                 { currentWeather ->
 
-                    Log.e(TAG, "HERE I AM NOW")
-                    Log.e(TAG, currentWeather.toString())
                     // This (locationId == null) means we have the new city and need new disposables
                     if (locationId == null) {
 
@@ -163,11 +159,11 @@ class MainActivity : WeatherActivity() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                searchButton.isEnabled = true // TODO: Refresh button stop animation?
+                searchButton.isEnabled = true
                 refreshWeather.clearAnimation()
                 refreshWeather.isEnabled = true
                 },
-                { error -> Log.e(TAG, "Unable to update username", error) }))
+                { error -> Log.e(TAG, "Unable to update weather", error) }))
     }
 
     /**
@@ -178,7 +174,6 @@ class MainActivity : WeatherActivity() {
 
         currentWeather.let {
 
-            // TODO: Header section too please
             city.text = currentWeather.name
             date.text = timeFormatter.headerDateTime(currentWeather.dt)
 
@@ -234,7 +229,6 @@ class MainActivity : WeatherActivity() {
         alertDialog.setButton(
             AlertDialog.BUTTON_NEUTRAL, getString(R.string.alert_button_location_search)) { dialog, _ ->
 
-            Log.e(TAG, "BOO")
             val cityField = alertDialog.city
             location = cityField.text.toString()
             locationId = null
