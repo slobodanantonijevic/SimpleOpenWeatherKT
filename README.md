@@ -11,9 +11,8 @@ The app uses free account of [OpenWeatherMap API](https://openweathermap.org/api
 - **Retrofit 2.0**: A type-safe HTTP client, that is used to comunicate with the designated API.
 - **RxJava/RxKotlin**: A Kotlin implementation of Reactive Extensions. For composing asynchronous sequences of code, and implementing a reactive/asynchronous programming concept.
 - **Dagger 2**: A dependency injection framework. We use it to implement a design pattern with minimal burden of writing the boilerplate code.
-- **Architecture Components**: A collection of libraries that help us design robust, testable, and maintainable apps. Mainly used for data persistance and lifecycle awareness.
+- **Architecture Components**: A collection of libraries that help us design robust, testable, and maintainable apps. Mainly used for data persistance and lifecycle awareness. (LiveData was not used, I have decide in favor of Rx Flowables, Singles and Completables)
   - **ViewModel**: Class is designed to store and manage UI-related data in a lifecycle conscious way. Used store the UI related data so it survives the device rotation
-  - **LiveData**: Was not used I have decide in favor of Rx Flowables, Singles and Completables
   - **Room**: A SQLite object mapping library. Used to Avoid boilerplate code and easily convert SQLite table data to Java objects.
 - **AndroidX**: The open-source project that is a major improvement to the original Android Support Library.
 
