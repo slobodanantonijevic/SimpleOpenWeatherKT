@@ -24,7 +24,7 @@ In order for the app to work you need to provide your own **APP ID** from https:
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
 
-   Copyright 2018 Slobodan Antonijević
+   Copyright 2019 Slobodan Antonijević
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
