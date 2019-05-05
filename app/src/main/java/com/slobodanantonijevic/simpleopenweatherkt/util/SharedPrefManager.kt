@@ -25,9 +25,9 @@ class SharedPrefManager(val context: Context) {
     /**
      *
      */
-    fun getSavedCityName(): String {
+    fun getSavedCityName(): String? {
 
-        return pref.getString(context.getString(R.string.location_name_key), null)!!
+        return pref.getString(context.getString(R.string.location_name_key), null)
     }
 
     /**

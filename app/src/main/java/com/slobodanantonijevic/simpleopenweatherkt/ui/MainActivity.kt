@@ -21,7 +21,6 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.os.Bundle
 import android.util.Log
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import androidx.appcompat.app.AlertDialog
@@ -115,8 +114,6 @@ class MainActivity : WeatherActivity() {
      *
      */
     private fun getFreshCurrentWeather(id: Int?, name: String?) {
-
-        Log.e(TAG, "REQUESTED FRESH WEATHER")
         Animations.rotate(this@MainActivity, refreshWeather)
         refreshWeather.isEnabled = false
         searchButton.isEnabled = false
@@ -126,7 +123,6 @@ class MainActivity : WeatherActivity() {
             .subscribe(
                 { currentWeather ->
 
-                    Log.e(TAG, "GOT THE FRESH WEATHER")
                     // This (locationId == null) means we have the new city and need new disposables
                     if (locationId == null) {
 
@@ -147,15 +143,12 @@ class MainActivity : WeatherActivity() {
      */
     private fun getFreshForecastWeather(id: Int?, name: String?) {
 
-        Log.e(TAG, "REQUESTED FRESH FORECAST")
         disposable.add(forecastViewModel.getFreshWeather(id, name)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { forecastWeather ->
 
-                    Log.e(TAG, "GOT THE FRESH FORECAST")
-                    // TODO: think on the Id
                     if (locationId == null) {
 
                         locationId = forecastWeather.city.id
@@ -184,8 +177,6 @@ class MainActivity : WeatherActivity() {
             .subscribe(
                 { currentWeather ->
 
-                    Log.e(TAG, "GOT THE DB WEATHER")
-                    Log.e(TAG, currentWeather.toString())
                     if (currentWeather != null) {
 
                         updateTheCurrentWeatherUi(currentWeather)
@@ -202,15 +193,12 @@ class MainActivity : WeatherActivity() {
      */
     private fun listenToForecast() {
 
-        Log.e(TAG, "LISTEN FOR FORECAST IN DB")
         disposable.add(forecastViewModel.forecastWeather(locationId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { forecastWeather ->
 
-                    Log.e(TAG, "GOT THE DB FORECAST")
-                    Log.e(TAG, forecastWeather.toString())
                     if (forecastWeather != null) {
 
                         updateTheForecastWeatherUi(forecastWeather)
@@ -302,7 +290,6 @@ class MainActivity : WeatherActivity() {
      */
     private fun updateTheForecastWeatherUi(forecast: Forecast) {
 
-        Log.e(TAG, "UPDATED FORECAST")
         forecast.list.let { list ->
 
             forecastAdapter?.update(list)

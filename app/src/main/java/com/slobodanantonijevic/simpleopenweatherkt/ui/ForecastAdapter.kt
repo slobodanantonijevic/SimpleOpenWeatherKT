@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.slobodanantonijevic.simpleopenweatherkt.App
 import com.slobodanantonijevic.simpleopenweatherkt.R
 import com.slobodanantonijevic.simpleopenweatherkt.model.DayForecast
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.HUMIDITY
@@ -22,6 +23,17 @@ import javax.inject.Inject
 class ForecastAdapter
     constructor (var forecast: List<DayForecast>, val context: Context) :
     RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>() {
+
+    @Inject
+    lateinit var timeFormatter: TimeFormatter
+
+    @Inject
+    lateinit var numUtil: NumberUtil
+
+    init {
+
+        App.from(context).appComponent.inject(this)
+    }
 
     /**
      *
@@ -66,12 +78,6 @@ class ForecastAdapter
      */
     inner class ForecastViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        @Inject
-        lateinit var timeFormatter: TimeFormatter
-
-        @Inject
-        lateinit var numUtil: NumberUtil
-
         private var isExpanded = false
 
         init {
@@ -82,7 +88,6 @@ class ForecastAdapter
         @SuppressLint("SetTextI18n")
         fun bindView(dayForecast: DayForecast) {
 
-            Log.e("ADAPTER", "BINDING")
             itemView.day.text = timeFormatter.weekDay(dayForecast.dt)
 
             // We don't really need decimal precision on a weather app

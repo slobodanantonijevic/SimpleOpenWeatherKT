@@ -18,6 +18,7 @@ package com.slobodanantonijevic.simpleopenweatherkt.di
 
 import android.app.Application
 import com.slobodanantonijevic.simpleopenweatherkt.App
+import com.slobodanantonijevic.simpleopenweatherkt.ui.ForecastAdapter
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -44,4 +45,5 @@ interface AppComponent {
     }
 
     fun inject(app: App)
+    fun inject(adapter: ForecastAdapter)
 }
