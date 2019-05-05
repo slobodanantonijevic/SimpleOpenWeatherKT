@@ -18,15 +18,22 @@
 package com.slobodanantonijevic.simpleopenweatherkt.ui
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.os.Bundle
 import android.util.Log
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.slobodanantonijevic.simpleopenweatherkt.R
 import com.slobodanantonijevic.simpleopenweatherkt.WeatherActivity
 import com.slobodanantonijevic.simpleopenweatherkt.model.CurrentWeather
+import com.slobodanantonijevic.simpleopenweatherkt.model.DayForecast
+import com.slobodanantonijevic.simpleopenweatherkt.model.Forecast
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.HUMIDITY
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.PRESSURE
 import com.slobodanantonijevic.simpleopenweatherkt.model.Weather.Companion.TEMPERATURE
@@ -42,6 +49,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.template_current_weather.*
 import kotlinx.android.synthetic.main.template_current_weather.city
+import java.util.ArrayList
 import javax.inject.Inject
 
 class MainActivity : WeatherActivity() {
@@ -58,6 +66,9 @@ class MainActivity : WeatherActivity() {
     private lateinit var currentWeatherViewModel: CurrentWeatherViewModel
     private lateinit var forecastViewModel: ForecastViewModel
 
+    private var forecastList: List<DayForecast> = ArrayList()
+    var forecastAdapter: ForecastAdapter? = null
+
     private var disposable = CompositeDisposable()
 
     /**
@@ -71,16 +82,22 @@ class MainActivity : WeatherActivity() {
         AndroidInjection.inject(this@MainActivity)
         sharedPrefManager = SharedPrefManager(this@MainActivity)
 
+        formTheRecycler()
+
         location = sharedPrefManager.getSavedCityName()
         locationId = sharedPrefManager.getSavedCity()
 
         currentWeatherViewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(CurrentWeatherViewModel::class.java)
-
-        // TODO: [ForecastViewModel]
+        forecastViewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(ForecastViewModel::class.java)
 
         searchButton.setOnClickListener { openTheLocationDialog() }
-        refreshWeather.setOnClickListener { getFreshWeather(locationId, null) }
+        refreshWeather.setOnClickListener {
+
+            getFreshCurrentWeather(locationId, null)
+            getFreshForecastWeather(locationId, null)
+        }
     }
 
     /**
@@ -90,8 +107,70 @@ class MainActivity : WeatherActivity() {
         super.onStart()
 
         listenToCurrentWeather()
-        // TODO: Listen for the Forecast
+        listenToForecast()
         checkTheLocation()
+    }
+
+    /**
+     *
+     */
+    private fun getFreshCurrentWeather(id: Int?, name: String?) {
+
+        Log.e(TAG, "REQUESTED FRESH WEATHER")
+        Animations.rotate(this@MainActivity, refreshWeather)
+        refreshWeather.isEnabled = false
+        searchButton.isEnabled = false
+        disposable.add(currentWeatherViewModel.getFreshWeather(id, name)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { currentWeather ->
+
+                    Log.e(TAG, "GOT THE FRESH WEATHER")
+                    // This (locationId == null) means we have the new city and need new disposables
+                    if (locationId == null) {
+
+                        locationId = currentWeather.id
+                        location = currentWeather.name
+
+                        sharedPrefManager.saveTheCity(locationId!!)
+                    }
+                    listenToCurrentWeather()
+                    updateTheCurrentWeather(currentWeather)
+
+                },
+                { error -> handleError(error, CURRENT_WEATHER) }))
+    }
+
+    /**
+     *
+     */
+    private fun getFreshForecastWeather(id: Int?, name: String?) {
+
+        Log.e(TAG, "REQUESTED FRESH FORECAST")
+        disposable.add(forecastViewModel.getFreshWeather(id, name)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { forecastWeather ->
+
+                    Log.e(TAG, "GOT THE FRESH FORECAST")
+                    // TODO: think on the Id
+                    if (locationId == null) {
+
+                        locationId = forecastWeather.city.id
+                        location = forecastWeather.city.name
+
+                        sharedPrefManager.saveTheCity(locationId!!)
+                    }
+
+                    forecastWeather.id = forecastWeather.city.id
+
+                    listenToForecast()
+                    updateTheForecastWeather(forecastWeather)
+
+                },
+                { error -> handleError(error, FORECAST_WEATHER) }))
     }
 
     /**
@@ -105,49 +184,40 @@ class MainActivity : WeatherActivity() {
             .subscribe(
                 { currentWeather ->
 
+                    Log.e(TAG, "GOT THE DB WEATHER")
+                    Log.e(TAG, currentWeather.toString())
                     if (currentWeather != null) {
 
                         updateTheCurrentWeatherUi(currentWeather)
                     } else {
 
                         openTheLocationDialog()
-                    } },
+                    }
+                },
                 { error -> handleError(error, CURRENT_WEATHER) }))
     }
 
     /**
      *
      */
-    private fun getFreshWeather(id: Int?, name: String?) {
+    private fun listenToForecast() {
 
-        //TODO: rotate refresh?
-        Animations.rotate(this@MainActivity, refreshWeather)
-        refreshWeather.isEnabled = false
-        searchButton.isEnabled = false
-        disposable.add(currentWeatherViewModel.getFreshWeather(id, name)
+        Log.e(TAG, "LISTEN FOR FORECAST IN DB")
+        disposable.add(forecastViewModel.forecastWeather(locationId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { currentWeather ->
+                { forecastWeather ->
 
-                    // This (locationId == null) means we have the new city and need new disposables
-                    if (locationId == null) {
+                    Log.e(TAG, "GOT THE DB FORECAST")
+                    Log.e(TAG, forecastWeather.toString())
+                    if (forecastWeather != null) {
 
-                        disposable.clear()
-                        locationId = currentWeather.id
-                        location = currentWeather.name
-
-                        sharedPrefManager.saveTheCity(locationId!!)
-
-                        // Reset the listeners
-                        listenToCurrentWeather()
-                        // TODO: Forecast too
+                        updateTheForecastWeatherUi(forecastWeather)
                     }
-
-                    updateTheCurrentWeather(currentWeather)
-
                 },
-                { error -> handleError(error, CURRENT_WEATHER) }))
+                { error -> handleError(error, FORECAST_WEATHER) }
+            ))
     }
 
     /**
@@ -164,6 +234,18 @@ class MainActivity : WeatherActivity() {
                 refreshWeather.isEnabled = true
                 },
                 { error -> Log.e(TAG, "Unable to update weather", error) }))
+    }
+
+    /**
+     *
+     */
+    private fun updateTheForecastWeather(forecast: Forecast) {
+
+        disposable.add(forecastViewModel.updateWeatherData(forecast)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ },
+                { error -> Log.e(TAG, "Unable to update forecast", error) }))
     }
 
     /**
@@ -208,6 +290,40 @@ class MainActivity : WeatherActivity() {
     /**
      *
      */
+    private fun formTheRecycler() {
+
+        forecastHolder.layoutManager = LinearLayoutManager(this)
+        forecastAdapter = ForecastAdapter(forecastList, this@MainActivity)
+        forecastHolder.adapter = forecastAdapter
+    }
+
+    /**
+     *
+     */
+    private fun updateTheForecastWeatherUi(forecast: Forecast) {
+
+        Log.e(TAG, "UPDATED FORECAST")
+        forecast.list.let { list ->
+
+            forecastAdapter?.update(list)
+
+            val controller: LayoutAnimationController
+            if (ORIENTATION_PORTRAIT == resources.configuration.orientation) {
+
+                controller = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_anim_present_from_bottom)
+            } else {
+
+                controller = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_anim_present_from_right)
+            }
+            forecastHolder.layoutAnimation = controller
+            forecastHolder.adapter?.notifyDataSetChanged()
+            forecastHolder.scheduleLayoutAnimation()
+        }
+    }
+
+    /**
+     *
+     */
     override fun locationError(location: String?) {
 
         val alertDialog = buildLocationError(location)
@@ -235,7 +351,11 @@ class MainActivity : WeatherActivity() {
             sharedPrefManager.saveTheCity(location!!)
             sharedPrefManager.eliminateTheSavedCity()
 
-            getFreshWeather(locationId, location)
+            // We've got the new city on our hand, so we need to clear old disposables
+            disposable.clear()
+
+            getFreshCurrentWeather(locationId, location)
+            getFreshForecastWeather(locationId, location)
 
             dialog.dismiss()
         }

@@ -26,5 +26,5 @@ import io.reactivex.Flowable
 interface ForecastDao: BaseDao<Forecast> {
 
     @Query("SELECT * FROM forecast_daily WHERE id = :id")
-    fun findById(id: Int?) : Flowable<Forecast>
+    fun findById(id: Int?): Flowable<Forecast>
 }
