@@ -373,6 +373,12 @@ class MainActivity : WeatherActivity() {
         disposable.clear()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        disposable.dispose()
+    }
+
     companion object {
 
         const val CURRENT_WEATHER = 1

@@ -7,5 +7,5 @@ import io.reactivex.Completable
 interface BaseDao<T> {
 
     @Insert(onConflict = REPLACE)
-    fun insert(vararg onj: T): Completable
+    fun insert(vararg obj: T): Completable
 }
