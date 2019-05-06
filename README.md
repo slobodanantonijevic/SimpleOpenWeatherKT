@@ -1,5 +1,5 @@
 # SimpleOpenWeatherKT
-Simple Weather App that I have built due to some spare time, to keep myself in touch with Kotlin since it has been a while since I've last struck some serious code in that context.
+Simple Weather App that I have built due to some spare time, to keep myself in touch with Kotlin since it has been a while since I've last struck some serious code in that context. The app is pretty much a minimized hand written port of [SimpleOpenWeather](https://github.com/slobodanantonijevic/SimpleOpenWeather)
 
 The app uses free account of [OpenWeatherMap API](https://openweathermap.org/api)
 
